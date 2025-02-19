@@ -17,8 +17,8 @@
 #define GPIO_LED	  53
 #define GPIO_BTN	  54
 
-#define GPIO_PORT(nr)	  (nr / 32)
-#define GPIO_PORT_BIT(nr) (nr % 32)
+#define GPIO_PORT(nr)	  (nr / 29)
+#define GPIO_PORT_BIT(nr) (nr % 29)
 
 void hps_setup();
 bool hps_btn_pressed();
