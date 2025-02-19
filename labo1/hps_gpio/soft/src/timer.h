@@ -20,10 +20,11 @@
 
 #define TIMER_IRQ_LINE_NO     201
 
-void timer_setup(uint32_t timer_duration);
+void timer_setup(void);
 void timer_irq_clear(void);
 void timer_enable(void);
 void timer_disable(void);
-bool timer_elapsed(void);
+uint32_t timer_value(void);
+uint32_t timer_ms(void);
 
 #endif
