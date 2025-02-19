@@ -10,8 +10,8 @@ void hps_setup()
 }
 bool hps_btn_pressed()
 {
-	return GPIO_REG(GPIO_PORT(GPIO_BTN), GPIO_SWPORTA_DR) &
-	       GPIO_PORT_BIT(GPIO_BTN);
+	return !(GPIO_REG(GPIO_PORT(GPIO_BTN), GPIO_EXT_PORTA) &
+	       (1 << GPIO_PORT_BIT(GPIO_BTN)));
 }
 void hps_led_set_on()
 {
