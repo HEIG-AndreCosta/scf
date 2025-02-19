@@ -23,10 +23,13 @@
  *
 *****************************************************************************************/
 
+
 #include <stdio.h>
 #include <stdbool.h>
 #include "timer.h"
 #include "hps.h"
+
+int __auto_semihosting;
 
 typedef enum { WAIT_PRESS, LED_ON, LED_OFF } state_t;
 
@@ -36,45 +39,54 @@ int main(void)
 	int blink_duration;
 
 	printf("Bonjour Michelle\n");
-	printf("Indiquez de fois aimeriez-vous voir la led clignoter > ");
+	printf("Indiquez de fois aimeriez-vous voir la led clignoter > \n");
+
 	scanf("%d", &blink_count);
-	printf("Indiquez le temps où la led doit rester allumé/éteinte > ");
+	printf("Indiquez le temps où la led doit rester allumé/éteinte > \n");
 	scanf("%d", &blink_duration);
 	printf("Merci Michelle\n");
 
-	timer_setup(blink_duration);
+	timer_setup();
 	hps_setup();
 	timer_enable();
+	hps_led_set_off();
 
 	state_t state = WAIT_PRESS;
 	int count = 0;
+	uint32_t last_timer_value = 0;
+
+
 	while (1) {
+
+
 		switch (state) {
 		case WAIT_PRESS:
 			if (hps_btn_pressed()) {
+				printf("Button Pressed !\n");
 				state = LED_ON;
-				count = 0;
-				timer_enable();
+				count = 1;
+				last_timer_value = timer_ms();
 			}
 			break;
 		case LED_ON:
-			if (timer_elapsed()) {
+			if (last_timer_value - timer_ms() > blink_duration) {
 				state = LED_OFF;
+				last_timer_value = timer_ms();
 			}
 			hps_led_set_on();
 			break;
 		case LED_OFF:
-			if (timer_elapsed()) {
-				--count;
-				if (count == 0) {
+			if (last_timer_value - timer_ms() > blink_duration) {
+				if (++count >= blink_count) {
 					state = WAIT_PRESS;
-					timer_disable();
 				} else {
 					state = LED_ON;
 				}
+				last_timer_value = timer_ms();
 			}
 			hps_led_set_off();
 			break;
 		}
+
 	}
 }
