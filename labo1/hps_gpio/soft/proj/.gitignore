@@ -1,3 +1,4 @@
 *.axf
 *.objdump
 *.srec
+/.metadata/
