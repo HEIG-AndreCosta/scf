@@ -13,6 +13,7 @@
 
 #define GPIO_SWPORTA_DR	  0x00
 #define GPIO_SWPORTA_DDR  0x04
+#define GPIO_EXT_PORTA	  0x50
 
 #define GPIO_LED	  53
 #define GPIO_BTN	  54
