@@ -5,7 +5,8 @@ import os
 from os import path
 import argparse, sys
 
-QUARTUS_DIR = "/opt/intelFPGA/18.1/quartus/"
+QUARTUS_DIR = "/opt/quartus/quartus/"
+
 
 def run(command):
 
@@ -20,21 +21,20 @@ def run(command):
             break
 
         # Kill when waiting for gdb connection
-        if line == b'Starting GDB Server.':
+        if line == b"Starting GDB Server.":
             process.kill()
             break
 
         yield line
 
+
 if __name__ == "__main__":
 
+    parser = argparse.ArgumentParser()
 
-    parser=argparse.ArgumentParser()
+    parser.add_argument("--sof", "-s", help="sof file to program FPGA", type=str)
 
-    parser.add_argument('--sof', '-s', help="sof file to program FPGA", type=str)
-
-
-    args=parser.parse_args()
+    args = parser.parse_args()
 
     if args.sof:
         sof_file = args.sof
@@ -42,7 +42,7 @@ if __name__ == "__main__":
             print(sof_file + " doesn't exist")
             exit()
         print("**********************LOAD SOF FILE**********************")
-        for output in run("quartus_pgm -c 1 -m jtag -o \"P;" + sof_file + "@2\""):
+        for output in run('quartus_pgm -c 1 -m jtag -o "P;' + sof_file + '@2"'):
             print(output.decode())
 
     if not args.sof:
