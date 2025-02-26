@@ -24,6 +24,8 @@ int main(void)
 {
 	pio_switchs_init();
 	pio_leds_init();
+	pio_key_init();
+	pio_seg7_init();
 	uint8_t old_key_pressed = 0;
 	while (1) {
 		uint8_t key_pressed = pio_key_read(0) | (pio_key_read(1) << 1);
