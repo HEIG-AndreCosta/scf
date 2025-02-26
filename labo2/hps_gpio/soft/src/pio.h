@@ -33,6 +33,12 @@ void pio_switchs_init(void);
 // Initializes the leds as output
 void pio_leds_init(void);
 
+// Initializes the keys as input
+void pio_key_init(void);
+
+// Initializes the 7 segments as output
+void pio_seg7_init(void);
+
 // Switchs_read function : Read the switchs value
 // Parameter : None
 // Return : Value of all Switchs (SW9 to SW0)
