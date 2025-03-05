@@ -29,76 +29,56 @@
 #include "address_map_arm.h"
 #include "defines.h"
 
+#include "gic.h"
+#include "pio.h"
 // Define the IRQ exception handler
-void __attribute__ ((interrupt)) __cs3_isr_irq(void)
+void __attribute__((interrupt)) __cs3_isr_irq(void)
 {
-	/***********
-	 * TO DO
-	 **********/
-
-	// Read CPU Interface registers to determine which peripheral has caused an interrupt 
-	
-	// Handle the interrupt if it comes from the KEYs
-
+	// Read CPU Interface registers to determine which peripheral has caused an interrupt
+	uint16_t irq_id = gic_get_irq_id();
+	// Handle the interrupt if it comes from the fpga
+	if (irq_id == FPGA_IRQ0_LINE_NO) {
+		pio_isr();
+	}
 	// Clear interrupt from the CPU Interface
+	gic_ack_irq(irq_id);
 
 	return;
-} 
+}
 
 // Define the remaining exception handlers
-void __attribute__ ((interrupt)) __cs3_reset (void)
+void __attribute__((interrupt)) __cs3_reset(void)
 {
-    while(1);
+	while (1)
+		;
 }
 
-void __attribute__ ((interrupt)) __cs3_isr_undef (void)
+void __attribute__((interrupt)) __cs3_isr_undef(void)
 {
-    while(1);
+	while (1)
+		;
 }
 
-void __attribute__ ((interrupt)) __cs3_isr_swi (void)
+void __attribute__((interrupt)) __cs3_isr_swi(void)
 {
-    while(1);
+	while (1)
+		;
 }
 
-void __attribute__ ((interrupt)) __cs3_isr_pabort (void)
+void __attribute__((interrupt)) __cs3_isr_pabort(void)
 {
-    while(1);
+	while (1)
+		;
 }
 
-void __attribute__ ((interrupt)) __cs3_isr_dabort (void)
+void __attribute__((interrupt)) __cs3_isr_dabort(void)
 {
-    while(1);
+	while (1)
+		;
 }
 
-void __attribute__ ((interrupt)) __cs3_isr_fiq (void)
+void __attribute__((interrupt)) __cs3_isr_fiq(void)
 {
-    while(1);
-}
-
-/* 
- * Initialize the banked stack pointer register for IRQ mode
-*/
-void set_A9_IRQ_stack(void)
-{
-	uint32_t stack, mode;
-	stack = A9_ONCHIP_END - 7;		// top of A9 onchip memory, aligned to 8 bytes
-	/* change processor to IRQ mode with interrupts disabled */
-	mode = INT_DISABLE | IRQ_MODE;
-	asm("msr cpsr, %[ps]" : : [ps] "r" (mode));
-	/* set banked stack pointer */
-	asm("mov sp, %[ps]" : : [ps] "r" (stack));
-
-	/* go back to SVC mode before executing subroutine return! */
-	mode = INT_DISABLE | SVC_MODE;
-	asm("msr cpsr, %[ps]" : : [ps] "r" (mode));
-}
-
-/* 
- * Turn on interrupts in the ARM processor
-*/
-void enable_A9_interrupts(void)
-{
-	uint32_t status = SVC_MODE | INT_ENABLE;
-	asm("msr cpsr, %[ps]" : : [ps]"r"(status));
+	while (1)
+		;
 }
