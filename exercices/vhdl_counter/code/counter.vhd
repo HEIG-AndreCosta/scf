@@ -1,5 +1,6 @@
 library ieee;
 use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
 
 entity counter is
 generic (
@@ -19,7 +20,6 @@ port (
 end counter;
 
 architecture behave of counter is
-
     signal value_s : unsigned(SIZE-1 downto 0);
     signal nbincr_s : unsigned(SIZE-1 downto 0);
     signal nbdecr_s : unsigned(SIZE-1 downto 0);
@@ -29,9 +29,9 @@ begin
     process (clk_i, rst_i)
     begin
         if rst_i = '1' then
-            value_s <= to_unsigned(0);
-            nbincr_s <= to_unsigned(0);
-            nbdecr_s <= to_unsigned(0);
+            value_s <= to_unsigned(0, SIZE);
+            nbincr_s <= to_unsigned(0, SIZE);
+            nbdecr_s <= to_unsigned(0, SIZE);
         elsif rising_edge(clk_i) then
             equals_o <= equal_s;
             if enable_i = '1' then
@@ -40,16 +40,24 @@ begin
                     nbincr_s <= nbincr_s + 1;
                 else 
                     value_s <= value_s - 1;
-                    nbdecr_s <= nb_decr_s + 1;
+                    nbdecr_s <= nbdecr_s + 1;
                 end if;
             end if;
         end if;
     end process;
-    process (all) 
+    --process (all) 
+    process (equal_val_i, value_s, nbincr_s, nbdecr_s, value_s) 
+        variable target_value_v : unsigned(SIZE-1 downto 0);
     begin
-        equal_s <= value_s = equal_val_i;
-        nbincr_o <= nbincr_s;
-        nbdecr_o <= nbdecr_s;
-        value_o <= value_s;
-    end
+        target_value_v := unsigned(equal_val_i);
+        
+        if value_s = target_value_v then
+            equal_s <= '1';
+        else
+            equal_s <= '0';
+        end if;
+        nbincr_o <= std_logic_vector(nbincr_s);
+        nbdecr_o <= std_logic_vector(nbdecr_s);
+        value_o <= std_logic_vector(value_s);
+    end process;
 end architecture;
