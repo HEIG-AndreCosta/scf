@@ -23,6 +23,7 @@ architecture behave of counter is
     signal value_s : unsigned(SIZE-1 downto 0);
     signal nbincr_s : unsigned(SIZE-1 downto 0);
     signal nbdecr_s : unsigned(SIZE-1 downto 0);
+    signal equal_s : std_logic;
 
 begin
     process (clk_i, rst_i)
@@ -32,6 +33,7 @@ begin
             nbincr_s <= to_unsigned(0);
             nbdecr_s <= to_unsigned(0);
         elsif rising_edge(clk_i) then
+            equals_o <= equal_s;
             if enable_i = '1' then
                 if up_nDown_i = '1' then
                     value_s <= value_s + 1;
@@ -43,4 +45,11 @@ begin
             end if;
         end if;
     end process;
+    process (all) 
+    begin
+        equal_s <= value_s = equal_val_i;
+        nbincr_o <= nbincr_s;
+        nbdecr_o <= nbdecr_s;
+        value_o <= value_s;
+    end
 end architecture;
