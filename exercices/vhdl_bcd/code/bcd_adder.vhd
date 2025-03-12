@@ -50,8 +50,38 @@ architecture struct of bcd_adder is
         );
 
     end component;
+    signal carry_s : std_logic_vector(NDIGITS downto 0);
 
 begin
+
+    carry_s(0) <= '0';
+
+    adders : for i in 0 to NDIGITS - 1 generate 
+            gen_add: generic_full_adder port map (
+                Op_A_i =>  input0_i(i),
+                Op_B_i =>  input1_i(i),
+                Carry_i => carry_s(i),
+                Carry_o => carry_s(i + 1),
+                Res_o => result_o(i)
+            );
+    end generate adders;
+
+
+    hamming: process (all)
+        variable sum : unsigned(hamming_o'range);
+    begin
+        sum := (others => '0');
+        for i in 0 to NDIGITS - 1 loop
+            for j in 0 to 3 loop
+                if(input0_i(i)(j) /= input1_i(i)(j)) then
+                    sum := sum + 1;
+                end if;
+            end loop;
+        end loop;
+        hamming_o <= std_logic_vector(sum);
+    end process;
+
+    result_o(NDIGITS) <= (0 => carry_s(NDIGITS -1), others => '0');
 
 
 end struct;
