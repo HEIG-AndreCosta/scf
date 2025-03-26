@@ -25,7 +25,7 @@
 
 		linux {
 			description = "Linux kernel";
-			data = /incbin/(" ");
+			data = /incbin/("../linux/arch/arm/boot/zImage");
 			type = "kernel";
 			arch = "arm";
 			os = "linux";
@@ -36,7 +36,7 @@
 
 		fdt {
 			description = "Linux device tree blob";
-			data = /incbin/("arch/arm/boot/dts/intel/socfpga/socfpga_cyclone5_de0_nano_soc.dtb");
+			data = /incbin/("../linux/arch/arm/boot/dts/intel/socfpga/socfpga_cyclone5_de1_nano_soc.dtb");
 			type = "flat_dt";
 			arch = "arm64";
 			compression = "none";
