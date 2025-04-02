@@ -19,13 +19,13 @@
 #
 # Quartus Prime
 # Version 23.1std.1 Build 993 05/14/2024 SC Standard Edition
-# Date created = 10:40:03  February 19, 2025
+# Date created = 11:05:36  April 02, 2025
 #
 # -------------------------------------------------------------------------- #
 
 QUARTUS_VERSION = "23.1"
-DATE = "10:40:03  February 19, 2025"
+DATE = "11:05:36  April 02, 2025"
 
 # Revisions
 
-PROJECT_REVISION = "DE1_SoC_top"
+PROJECT_REVISION = "fpga_ip_axi4lite"
