@@ -249,10 +249,6 @@ architecture top of DE1_SoC_top is
     constant SWITCH_PADDING : std_logic_vector(31 -SW_i'length downto 0) := (others => '0');
     constant KEY_PADDING : std_logic_vector(31 -key_i'length downto 0) := (others => '0');
 
-    constant LED_PADDING : std_logic_vector(31 -LEDR_o'length downto 0) := (others => '0');
-    constant HEX_0_4_PADDING : std_logic_vector(31 -hex0_4_s'length downto 0) := (others => '0');
-    constant HEX_4_5_PADDING : std_logic_vector(31 -hex4_5_s'length downto 0) := (others => '0');
-
 begin
 
 ---------------------------------------------------------
