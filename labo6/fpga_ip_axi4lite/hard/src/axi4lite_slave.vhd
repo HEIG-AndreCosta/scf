@@ -288,7 +288,7 @@ begin
             -- xor detects the edge
             -- and with the current value so we only keep the rising edge
             -- or makes sure we keep the previous '1'
-            edge_capture_s <= edge_capture_s or ((prev_input_reg_B_s xor input_reg_A_s) and input_reg_A_s);
+            edge_capture_s <= edge_capture_s or ((prev_input_reg_B_s xor input_reg_B_s) and input_reg_B_s);
         end if;
     end process;
 
