@@ -95,8 +95,6 @@ int main(void)
 		       axi_id, read_id);
 		halt();
 	}
-
-	uint8_t old_key_pressed = 0;
 	while (1) {
 		for (size_t i = 0; i < NB_KEYS; ++i) {
 			if (axi_io_key_rising_edge(i)) {
