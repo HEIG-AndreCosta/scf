@@ -46,20 +46,6 @@
 #define HEX_FULL_MASK	     ((1 << (NB_SEGS * HEX_BITS)) - 1)
 #define HEX_MASK	     ((1 << HEX_BITS) - 1)
 
-typedef void (*irq_cb)(uint8_t key, void *);
-
-// Initializes the switches as input
-void axi_io_switchs_init(void);
-
-// Initializes the leds as output
-void axi_io_leds_init(void);
-
-// Initializes the keys as input
-void axi_io_key_init(void);
-
-// Initializes the 7 segments as output
-void axi_io_seg7_init(void);
-
 // Switchs_read functaxi_ion : Read the switchs value
 // Parameter : None
 // Return : Value of all Switchs (SW9 to SW0)
