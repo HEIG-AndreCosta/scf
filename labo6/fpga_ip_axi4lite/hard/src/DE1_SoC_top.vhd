@@ -205,12 +205,11 @@ architecture top of DE1_SoC_top is
             ------------------------------------
             -- FPGA Side
             ------------------------------------
-
-            -- PIO 
-            leds_o_export                    : out   std_logic_vector(9 downto 0);                   
-            switchs_i_export                 : in    std_logic_vector(9 downto 0)  := (others => 'X');
-            hex0_4_o_export                  : out   std_logic_vector(27 downto 0);
-            keys_i_export                    : in    std_logic_vector(3 downto 0)  := (others => 'X');
+            axi4lite_slave_extern_input_reg_a_i  : in    std_logic_vector(31 downto 0) := (others => 'X'); -- input_reg_a_i
+            axi4lite_slave_extern_input_reg_b_i  : in    std_logic_vector(31 downto 0) := (others => 'X'); -- input_reg_b_i
+            axi4lite_slave_extern_output_reg_a_o : out   std_logic_vector(31 downto 0);                    -- output_reg_a_o
+            axi4lite_slave_extern_output_reg_b_o : out   std_logic_vector(31 downto 0);                    -- output_reg_b_o
+            axi4lite_slave_extern_output_reg_c_o : out   std_logic_vector(31 downto 0);                    -- output_reg_c_o
 
             -- Clock
             clk_i_clk                        : in    std_logic                     := 'X';
@@ -243,7 +242,16 @@ architecture top of DE1_SoC_top is
 
         );
     end component qsys_system;
-    signal hex0_4_s : std_logic_vector(27 downto 0);
+    signal hex0_4_s : std_logic_vector(31 downto 0);
+    signal hex4_5_s : std_logic_vector(31 downto 0);
+    signal led_s : std_logic_vector(31 downto 0);
+
+    constant SWITCH_PADDING : std_logic_vector(31 -SW_i'length downto 0) := (others => '0');
+    constant KEY_PADDING : std_logic_vector(31 -key_i'length downto 0) := (others => '0');
+
+    constant LED_PADDING : std_logic_vector(31 -LEDR_o'length downto 0) := (others => '0');
+    constant HEX_0_4_PADDING : std_logic_vector(31 -hex0_4_s'length downto 0) := (others => '0');
+    constant HEX_4_5_PADDING : std_logic_vector(31 -hex4_5_s'length downto 0) := (others => '0');
 
 begin
 
@@ -257,11 +265,11 @@ begin
         -- FPGA Side
         ------------------------------------
 
-        -- PIO 
-        leds_o_export    => LEDR_o,                   
-        switchs_i_export => SW_i,
-        hex0_4_o_export => hex0_4_s, 
-        keys_i_export =>  KEY_i,
+        axi4lite_slave_extern_input_reg_a_i => KEY_PADDING & KEY_i, 
+        axi4lite_slave_extern_input_reg_b_i => SWITCH_PADDING & SW_i,
+        axi4lite_slave_extern_output_reg_a_o   => led_s,
+        axi4lite_slave_extern_output_reg_b_o   => hex0_4_s,
+        axi4lite_slave_extern_output_reg_c_o   => hex4_5_s,
 
         -- Clock                          
         clk_i_clk        => CLOCK_50_i,
@@ -300,6 +308,9 @@ begin
     HEX1_o <= hex0_4_s(13 downto 7);
     HEX2_o <= hex0_4_s(20 downto 14);
     HEX3_o <= hex0_4_s(27 downto 21);
+    HEX4_o <= hex4_5_s(HEX4_o'range);
+    HEX5_o <= hex4_5_s(13 downto 7);
+    LEDR_o <= led_s(LEDR_o'range);
 
 
 end top;

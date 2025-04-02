@@ -9,6 +9,27 @@
    categories="System" />
  <parameter name="bonusData"><![CDATA[bonusData 
 {
+   element axi4lite_slave_0
+   {
+      datum _sortIndex
+      {
+         value = "6";
+         type = "int";
+      }
+   }
+   element axi4lite_slave_0.altera_axi4lite_slave
+   {
+      datum _lockedAddress
+      {
+         value = "0";
+         type = "boolean";
+      }
+      datum baseAddress
+      {
+         value = "0";
+         type = "String";
+      }
+   }
    element buttons
    {
       datum _sortIndex
@@ -46,6 +67,30 @@
          type = "int";
       }
    }
+   element qsys_system
+   {
+      datum _originalDeviceFamily
+      {
+         value = "Cyclone V";
+         type = "String";
+      }
+   }
+   element qsys_system
+   {
+      datum _originalDeviceFamily
+      {
+         value = "Cyclone V";
+         type = "String";
+      }
+   }
+   element qsys_system
+   {
+      datum _originalDeviceFamily
+      {
+         value = "Cyclone V";
+         type = "String";
+      }
+   }
    element seg0_4
    {
       datum _sortIndex
@@ -76,37 +121,34 @@
  <parameter name="hideFromIPCatalog" value="false" />
  <parameter name="lockedInterfaceDefinition" value="" />
  <parameter name="maxAdditionalLatency" value="1" />
- <parameter name="projectName" value="DE1_SoC.qpf" />
+ <parameter name="projectName">fpga_ip_axi4lite.qpf</parameter>
  <parameter name="sopcBorderPoints" value="false" />
  <parameter name="systemHash" value="0" />
  <parameter name="testBenchDutName" value="" />
  <parameter name="timeStamp" value="0" />
  <parameter name="useTestBenchNamingPattern" value="false" />
  <instanceScript></instanceScript>
+ <interface
+   name="axi4lite_slave_extern"
+   internal="axi4lite_slave_0.external_connection"
+   type="conduit"
+   dir="end" />
  <interface name="clk_i" internal="clk_0.clk_in" type="clock" dir="end" />
- <interface
-   name="hex0_4_o"
-   internal="seg0_4.external_connection"
-   type="conduit"
-   dir="end" />
+ <interface name="hex0_4_o" internal="seg0_4.external_connection" />
  <interface name="hps_io_0" internal="hps_0.hps_io" type="conduit" dir="end" />
- <interface
-   name="keys_i"
-   internal="buttons.external_connection"
-   type="conduit"
-   dir="end" />
- <interface
-   name="leds_o"
-   internal="leds.external_connection"
-   type="conduit"
-   dir="end" />
+ <interface name="keys_i" internal="buttons.external_connection" />
+ <interface name="leds_o" internal="leds.external_connection" />
  <interface name="memory" internal="hps_0.memory" type="conduit" dir="end" />
- <interface
-   name="switchs_i"
-   internal="switches.external_connection"
-   type="conduit"
-   dir="end" />
- <module name="buttons" kind="altera_avalon_pio" version="23.1" enabled="1">
+ <interface name="switchs_i" internal="switches.external_connection" />
+ <module
+   name="axi4lite_slave_0"
+   kind="axi4lite_slave"
+   version="1.0"
+   enabled="1">
+  <parameter name="AXI_ADDR_WIDTH" value="12" />
+  <parameter name="AXI_DATA_WIDTH" value="32" />
+ </module>
+ <module name="buttons" kind="altera_avalon_pio" version="23.1" enabled="0">
   <parameter name="bitClearingEdgeCapReg" value="false" />
   <parameter name="bitModifyingOutReg" value="false" />
   <parameter name="captureEdge" value="true" />
@@ -656,7 +698,7 @@
   <parameter name="usb_mp_clk_div" value="0" />
   <parameter name="use_default_mpu_clk" value="true" />
  </module>
- <module name="leds" kind="altera_avalon_pio" version="23.1" enabled="1">
+ <module name="leds" kind="altera_avalon_pio" version="23.1" enabled="0">
   <parameter name="bitClearingEdgeCapReg" value="false" />
   <parameter name="bitModifyingOutReg" value="false" />
   <parameter name="captureEdge" value="false" />
@@ -670,7 +712,7 @@
   <parameter name="simDrivenValue" value="0" />
   <parameter name="width" value="10" />
  </module>
- <module name="seg0_4" kind="altera_avalon_pio" version="23.1" enabled="1">
+ <module name="seg0_4" kind="altera_avalon_pio" version="23.1" enabled="0">
   <parameter name="bitClearingEdgeCapReg" value="false" />
   <parameter name="bitModifyingOutReg" value="false" />
   <parameter name="captureEdge" value="false" />
@@ -684,7 +726,7 @@
   <parameter name="simDrivenValue" value="0" />
   <parameter name="width" value="28" />
  </module>
- <module name="switches" kind="altera_avalon_pio" version="23.1" enabled="1">
+ <module name="switches" kind="altera_avalon_pio" version="23.1" enabled="0">
   <parameter name="bitClearingEdgeCapReg" value="false" />
   <parameter name="bitModifyingOutReg" value="false" />
   <parameter name="captureEdge" value="false" />
@@ -698,6 +740,15 @@
   <parameter name="simDrivenValue" value="0" />
   <parameter name="width" value="10" />
  </module>
+ <connection
+   kind="avalon"
+   version="23.1"
+   start="hps_0.h2f_lw_axi_master"
+   end="axi4lite_slave_0.altera_axi4lite_slave">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x0000" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
  <connection
    kind="avalon"
    version="23.1"
@@ -742,6 +793,11 @@
    kind="clock"
    version="23.1"
    start="clk_0.clk"
+   end="axi4lite_slave_0.clock_sink" />
+ <connection
+   kind="clock"
+   version="23.1"
+   start="clk_0.clk"
    end="hps_0.h2f_lw_axi_clock" />
  <connection
    kind="interrupt"
@@ -782,6 +838,11 @@
    version="23.1"
    start="hps_0.h2f_reset"
    end="buttons.reset" />
+ <connection
+   kind="reset"
+   version="23.1"
+   start="hps_0.h2f_reset"
+   end="axi4lite_slave_0.reset_sink" />
  <interconnectRequirement for="$system" name="qsys_mm.clockCrossingAdapter" value="HANDSHAKE" />
  <interconnectRequirement for="$system" name="qsys_mm.enableEccProtection" value="FALSE" />
  <interconnectRequirement for="$system" name="qsys_mm.insertDefaultSlave" value="FALSE" />
