@@ -100,6 +100,7 @@ int main(void)
 		halt();
 	}
 	update_hex();
+	unset_error();
 	while (1) {
 		for (size_t i = 0; i < NB_KEYS; ++i) {
 			if (axi_io_key_rising_edge(i)) {
