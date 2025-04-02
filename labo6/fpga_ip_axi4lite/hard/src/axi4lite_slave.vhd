@@ -108,6 +108,8 @@ architecture rtl of axi4lite_slave is
 
     signal prev_input_reg_A_s : std_logic_vector(31 downto 0);
     signal edge_capture_s : std_logic_vector(31 downto 0);
+    signal new_edge_capture_s : std_logic_vector(31 downto 0);
+    signal wr_edge_capture_s : std_logic;
 
     signal dummy_cnt : unsigned(15 downto 0);
 
@@ -224,9 +226,11 @@ begin
                                 end loop;
                     when 3 => for byte_index in 0 to (AXI_DATA_WIDTH/8-1) loop
                                     if ( axi_wstrb_i(byte_index) = '1' ) then
-                                        edge_capture_s(byte_index * 8 + 7 downto byte_index * 8) <= 
+                                        new_edge_capture_s(byte_index * 8 + 7 downto byte_index * 8) <= 
                                             edge_capture_s (byte_index * 8 + 7 downto byte_index * 8) and
                                             not axi_wdata_i(byte_index * 8 + 7 downto byte_index * 8);
+
+                                        wr_edge_capture_s <= '1';
                                     end if;
                                 end loop;
                     when 5 => for byte_index in 0 to (AXI_DATA_WIDTH/8-1) loop
@@ -279,17 +283,30 @@ begin
             input_reg_A_s <= (others => '0');
             input_reg_B_s <= (others => '0');
             prev_input_reg_A_s <= (others => '0');
-            edge_capture_s <= (others => '0');
         elsif rising_edge(clk_i) then
             input_reg_A_s <= input_reg_A_i;
             input_reg_B_s <= input_reg_B_i;
             prev_input_reg_A_s <= input_reg_A_s;
+        end if;
+    end process;
 
-            -- xor detects the edge
-            -- and with the current value so we only keep the rising edge
-            -- not is because the button is active low
-            -- or makes sure we keep the previous '1'
-            edge_capture_s <= edge_capture_s or ((prev_input_reg_A_s xor input_reg_A_s) and not input_reg_A_s);
+    process (clk_i, reset_s)
+        variable current_edge_capture_s: std_logic_vector(edge_capture_s'range);
+    begin
+        if reset_s = '1' then
+            edge_capture_s <= (others => '0');
+        elsif rising_edge(clk_i) then
+
+            current_edge_capture_s := edge_capture_s;
+            if wr_edge_capture_s = '1' then
+                current_edge_capture_s := new_edge_capture_s;
+            end if;
+
+            -- 'xor' detects the edge
+            -- 'and' with the current value so we only keep the rising edge
+            -- 'not' is because the button is active low
+            -- 'or' makes sure we keep the previous '1'
+            edge_capture_s <= current_edge_capture_s or ((prev_input_reg_A_s xor input_reg_A_s) and not input_reg_A_s);
         end if;
     end process;
 
@@ -412,6 +429,8 @@ begin
                 axi_rdata_s <= internal_reg_s;
             when 2 =>
                 axi_rdata_s <= input_reg_A_s;
+            when 3 =>
+                axi_rdata_s <= edge_capture_s;
             when 4 =>
                 axi_rdata_s <= input_reg_B_s;
             when 5 =>
