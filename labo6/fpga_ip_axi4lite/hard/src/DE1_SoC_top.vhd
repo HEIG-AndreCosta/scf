@@ -242,7 +242,7 @@ architecture top of DE1_SoC_top is
 
         );
     end component qsys_system;
-    signal hex0_4_s : std_logic_vector(31 downto 0);
+    signal hex0_3_s : std_logic_vector(31 downto 0);
     signal hex4_5_s : std_logic_vector(31 downto 0);
     signal led_s : std_logic_vector(31 downto 0);
 
@@ -264,7 +264,7 @@ begin
         axi4lite_slave_extern_input_reg_a_i => KEY_PADDING & KEY_i, 
         axi4lite_slave_extern_input_reg_b_i => SWITCH_PADDING & SW_i,
         axi4lite_slave_extern_output_reg_a_o   => led_s,
-        axi4lite_slave_extern_output_reg_b_o   => hex0_4_s,
+        axi4lite_slave_extern_output_reg_b_o   => hex0_3_s,
         axi4lite_slave_extern_output_reg_c_o   => hex4_5_s,
 
         -- Clock                          
@@ -300,10 +300,10 @@ begin
         hps_io_0_hps_io_gpio_inst_GPIO53  => HPS_LED_io
     );
 
-    HEX0_o <= hex0_4_s(HEX0_o'range);
-    HEX1_o <= hex0_4_s(13 downto 7);
-    HEX2_o <= hex0_4_s(20 downto 14);
-    HEX3_o <= hex0_4_s(27 downto 21);
+    HEX0_o <= hex0_3_s(HEX0_o'range);
+    HEX1_o <= hex0_3_s(13 downto 7);
+    HEX2_o <= hex0_3_s(20 downto 14);
+    HEX3_o <= hex0_3_s(27 downto 21);
     HEX4_o <= hex4_5_s(HEX4_o'range);
     HEX5_o <= hex4_5_s(13 downto 7);
     LEDR_o <= led_s(LEDR_o'range);
