@@ -95,6 +95,7 @@ int main(void)
 		       axi_id, read_id);
 		halt();
 	}
+	update_hex();
 	while (1) {
 		for (size_t i = 0; i < NB_KEYS; ++i) {
 			if (axi_io_key_rising_edge(i)) {
