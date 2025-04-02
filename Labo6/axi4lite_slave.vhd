@@ -106,6 +106,7 @@ architecture rtl of axi4lite_slave is
     signal output_reg_B_s  : std_logic_vector(31 downto 0);
     signal output_reg_C_s  : std_logic_vector(31 downto 0);
 
+    signal edge_capture_s : std_logic_vector(31 downto 0);
     signal dummy_cnt : unsigned(15 downto 0);
 
     signal byte_index   : integer;
@@ -219,13 +220,20 @@ begin
                                         internal_reg_s(byte_index*8+7 downto byte_index*8) <= axi_wdata_i(byte_index*8+7 downto byte_index*8);
                                     end if;
                                 end loop;
+                    when 3 => for byte_index in 0 to (AXI_DATA_WIDTH/8-1) loop
+                                    if ( axi_wstrb_i(byte_index) = '1' ) then
+                                        edge_capture_s(byte_index * 8 + 7 downto byte_index * 8) <= 
+                                            edge_capture_s (byte_index * 8 + 7 downto byte_index * 8) and
+                                            not axi_wdata_i(byte_index * 8 + 7 downto byte_index * 8);
+                                    end if;
+                                end loop;
                     when 5 => for byte_index in 0 to (AXI_DATA_WIDTH/8-1) loop
                                   if ( axi_wstrb_i(byte_index) = '1' ) then
                                       -- Respective byte enables are asserted as per write strobe slave register 5
                                       output_reg_A_s(byte_index*8+7 downto byte_index*8) <= axi_wdata_i(byte_index*8+7 downto byte_index*8);
                                   end if;
                               end loop;
-                    when 6   => for byte_index in 0 to (AXI_DATA_WIDTH/8-1) loop
+                    when 6 => for byte_index in 0 to (AXI_DATA_WIDTH/8-1) loop
                                     if ( axi_wstrb_i(byte_index) = '1' ) then
                                         -- Respective byte enables are asserted as per write strobe slave register 5
                                         output_reg_A_s(byte_index*8+7 downto byte_index*8) <= 
@@ -233,6 +241,20 @@ begin
                                             axi_wdata_i(byte_index*8+7 downto byte_index*8);
                                     end if;
                                 end loop;
+                    when 7 => for byte_index in 0 to (AXI_DATA_WIDTH/8-1) loop
+                                    if ( axi_wstrb_i(byte_index) = '1' ) then
+                                        output_reg_A_s(byte_index * 8 + 7 downto byte_index * 8) <= 
+                                            output_reg_A_s(byte_index * 8 + 7 downto byte_index * 8) and not
+                                            axi_wdata_i(byte_index * 8 + 7 downto byte_index * 8);
+                                    end if;
+                                end loop;
+
+                    when 8   => for byte_index in 0 to (AXI_DATA_WIDTH/8-1) loop
+                                    if ( axi_wstrb_i(byte_index) = '1' ) then
+                                        output_reg_B_s(byte_index*8+7 downto byte_index*8) <= axi_wdata_i(byte_index*8+7 downto byte_index*8);
+                                    end if;
+                                end loop;
+
                     when 9   => for byte_index in 0 to (AXI_DATA_WIDTH/8-1) loop
                                     if ( axi_wstrb_i(byte_index) = '1' ) then
                                         -- Respective byte enables are asserted as per write strobe slave register 5
