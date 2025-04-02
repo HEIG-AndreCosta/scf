@@ -212,6 +212,8 @@ begin
             output_reg_A_s   <= (others => '0');
             output_reg_C_s <= (others => '0');
             axi_write_done_s <= '1';
+            new_edge_capture_s <= (others => '0');
+            wr_edge_capture_s <= '0';
         elsif rising_edge(clk_i) then
             axi_write_done_s <= '0';
             if axi_data_wren_s = '1' then
