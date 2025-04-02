@@ -39,6 +39,7 @@ static void halt(void)
 static void on_key0_press(void)
 {
 	current_value = axi_io_switchs_read();
+	update_hex();
 }
 
 static void on_key1_press(void)
@@ -66,6 +67,7 @@ static void on_key2_press(void)
 static void on_key3_press(void)
 {
 	current_value = 0;
+	update_hex();
 }
 
 typedef void (*on_key_press_fn)(void);
