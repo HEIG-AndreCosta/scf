@@ -52,16 +52,18 @@ static void on_key1_press(void)
 	unset_error();
 	update_hex();
 
-	if (--current_value >= MAX_HEX_VALUE) {
-		current_value = MAX_HEX_VALUE;
-	}
 }
 
 static void on_key2_press(void)
 {
-	if (++current_value >= MAX_HEX_VALUE) {
-		current_value = 0;
+	if(current_value == MAX_HEX_VALUE)
+	{
+		set_error();
+		return;
 	}
+	current_value++;
+	unset_error();
+	update_hex();
 }
 
 static void on_key3_press(void)
