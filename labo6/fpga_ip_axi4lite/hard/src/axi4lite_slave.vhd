@@ -106,7 +106,7 @@ architecture rtl of axi4lite_slave is
     signal output_reg_B_s  : std_logic_vector(31 downto 0);
     signal output_reg_C_s  : std_logic_vector(31 downto 0);
 
-    signal prev_input_reg_B_s : std_logic_vector(31 downto 0);
+    signal prev_input_reg_A_s : std_logic_vector(31 downto 0);
     signal edge_capture_s : std_logic_vector(31 downto 0);
 
     signal dummy_cnt : unsigned(15 downto 0);
@@ -278,17 +278,17 @@ begin
         if reset_s = '1' then
             input_reg_A_s <= (others => '0');
             input_reg_B_s <= (others => '0');
-            prev_input_reg_B_s <= (others => '0');
+            prev_input_reg_A_s <= (others => '0');
             edge_capture_s <= (others => '0');
         elsif rising_edge(clk_i) then
             input_reg_A_s <= input_reg_A_i;
             input_reg_B_s <= input_reg_B_i;
-            prev_input_reg_B_s <= input_reg_B_s;
+            prev_input_reg_A_s <= input_reg_A_s;
 
             -- xor detects the edge
             -- and with the current value so we only keep the rising edge
             -- or makes sure we keep the previous '1'
-            edge_capture_s <= edge_capture_s or ((prev_input_reg_B_s xor input_reg_B_s) and input_reg_B_s);
+            edge_capture_s <= edge_capture_s or ((prev_input_reg_A_s xor input_reg_A_s) and input_reg_A_s);
         end if;
     end process;
 
