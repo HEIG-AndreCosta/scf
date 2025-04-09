@@ -43,7 +43,6 @@
 	de1_io {
 		compatible = "de1_io";
 		reg = <0xff200000 0x28>;
-		reg_size = <4>;
 		status = "okay";
 	};
 };
