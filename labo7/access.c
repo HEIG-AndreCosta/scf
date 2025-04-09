@@ -114,7 +114,7 @@ static long on_ioctl(struct file *filp, unsigned int code, unsigned long value)
 		return -EINVAL;
 	}
 
-	if (value > priv->reg_count) {
+	if (value >= priv->reg_count) {
 		return -EINVAL;
 	}
 	priv->selected_offset = value * sizeof(uint32_t);
