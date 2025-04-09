@@ -4,3 +4,6 @@
 **/incremental_db
 exercices/proj/c5_pin_model_dump.txt
 **.bak
+*.*o
+**compile_commands.json
+**.itb
