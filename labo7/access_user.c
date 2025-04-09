@@ -1,4 +1,4 @@
-#include "../access.h"
+#include "access.h"
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,7 +36,7 @@ int main(int argc, char **argv)
 
 	int err = ioctl(fileno(fp), IOCTL_ACCESS_SELECT_REGISTER, reg);
 	if (err) {
-		printf("Failed to select the register %d", reg);
+		printf("Failed to select the register %d\n", reg);
 		return EXIT_FAILURE;
 	}
 
